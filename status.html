@@ -5,12 +5,16 @@
       <thead>
         <th>Gruppe</th>
         <th>Status</th>
+        <th>Letzte Änderung/Letzter Reset</th>
+        <th></th>
       </thead>
       <tbody>
         {{range .}}
           <tr>
-            <td></td>
-            <td></td>
+            <td><a href="">{{.Title}}</a></td>
+            <td>{{.Status}}</td>
+            <td>{{.Date.Format "2. Januar, 3:04 Uhr"}}</td>
+            <td><input type="button" value="Checked"></td>
           </tr>
         {{end}}
       </tbody>
