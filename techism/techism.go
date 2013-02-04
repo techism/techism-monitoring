@@ -3,14 +3,9 @@ package techism
 import (
     "appengine"
     "appengine/datastore"
-    "appengine/urlfetch"
     "text/template"
     "net/http"
     "time"
-    "hash/fnv"
-    "io/ioutil"
-    "fmt"   
-    "strconv"
 )
 
 type Site struct {
@@ -28,6 +23,7 @@ var (
 func init() {
     http.HandleFunc("/", root)
     http.HandleFunc("/check", check_all)
+    http.HandleFunc("/reset", reset)
 }
 
 func root(w http.ResponseWriter, r *http.Request) {
@@ -63,7 +59,6 @@ func check_all(w http.ResponseWriter, r *http.Request){
 	    		checksum := calculate_checksum(body)
 	    		if checksum == value.Checksum {
 	    			value.Status = "OK"
-
 	    		} else {
 	    			value.Status = "CHANGED"
 	    		}
@@ -80,25 +75,10 @@ func check_all(w http.ResponseWriter, r *http.Request){
 	    }
 	}
 
-func get_body(url string, r *http.Request)(string, string) {
-    c := appengine.NewContext(r)
-    client := urlfetch.Client(c)
-    resp, err := client.Get(url)
-    if err != nil {
-        fmt.Printf("key: %s", err)
-		return "","ERROR"
-    }
-    body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Printf("key: %s", err)
-		return "","ERROR"
-	}
-	return string(body), ""
-}
-
-func calculate_checksum(body string) (string){
-	fnv_sum := fnv.New64()
-	fnv_sum.Write([]byte(body))
-	checksum := fnv_sum.Sum64()
-	return strconv.FormatUint(checksum, 16)
+func reset(w http.ResponseWriter, r *http.Request){
+	//load site
+	//update checksum
+	//update date
+	//set status to OK
+	root(w, r);
 }
