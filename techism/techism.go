@@ -26,8 +26,8 @@ func init() {
     http.HandleFunc("/reset", reset)
 }
 
+//shows all sites from the database
 func root(w http.ResponseWriter, r *http.Request) {
-
     c := appengine.NewContext(r)
     q := datastore.NewQuery("Site").Order("-Date").Limit(10)
     sites := make([]Site, 0, 10)
@@ -37,48 +37,59 @@ func root(w http.ResponseWriter, r *http.Request) {
     }
     if err := statusTemplate.Execute(w, sites); err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
     }
 }
 
+//checks a sites with status = OK
 func check_all(w http.ResponseWriter, r *http.Request){
-	    c := appengine.NewContext(r)
-	    //TODO also filter Status = "ERROR"
-	    q := datastore.NewQuery("Site").Filter("Status =", "OK").Order("-Date").Limit(10)
-	    sites := make([]Site, 0, 10)
-	    keys, err := q.GetAll(c, &sites);
-	    if err != nil {
-	        http.Error(w, err.Error(), http.StatusInternalServerError)
-	        return
-	    }
-	     
-	    for index, value := range sites {
-	    	body,err := get_body(value.Url, r)
-	    	if err != "" {
-	    		value.Status = "ERROR"
-	    	} else {
-	    		checksum := calculate_checksum(body)
-	    		if checksum == value.Checksum {
-	    			value.Status = "OK"
-	    		} else {
-	    			value.Status = "CHANGED"
-	    		}
-	    		value.Checksum = checksum;
-	    	}
-			value.Date = time.Now()
-			if _, err := datastore.Put(c, keys[index], &value);
-	    	err != nil {
-	    		http.Error(w, err.Error(), http.StatusInternalServerError)
-			}
+    c := appengine.NewContext(r)
+    //TODO also filter Status = "ERROR"
+    q := datastore.NewQuery("Site").Filter("Status =", "OK").Order("-Date").Limit(10)
+    sites := make([]Site, 0, 10)
+    keys, err := q.GetAll(c, &sites);
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+    for index, site := range sites {
+    	check_site_status(site, r)
+    	_, err := datastore.Put(c, keys[index], &site);
+    	if err != nil {
+    		http.Error(w, err.Error(), http.StatusInternalServerError)
+    		return
 		}
-		if err := statusTemplate.Execute(w, sites); err != nil {
-	        http.Error(w, err.Error(), http.StatusInternalServerError)
-	    }
 	}
+	if err := statusTemplate.Execute(w, sites); err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+}
 
+//resets status and checksum of a given site
 func reset(w http.ResponseWriter, r *http.Request){
-	//load site
-	//update checksum
-	//update date
-	//set status to OK
+	c := appengine.NewContext(r)
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	//TODO replace with request parameter
+	title := r.FormValue("title")
+	q := datastore.NewQuery("Site").Filter("Title =", title)
+	sites := make([]Site, 0, 1)
+    keys, err := q.GetAll(c, &sites);
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+    site := sites[0]
+    html_body, err = get_html_body(site.Url, r) 
+    if err != "" {
+		site.Status = "ERROR"
+    } else
+    	site.Checksum = calculate_checksum (html_body)
+    	site.Status = "OK"
+	}
+	site.Date = time.Now()
 	root(w, r);
 }
