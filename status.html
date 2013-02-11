@@ -14,7 +14,7 @@
             <td><a href="{{.Url}}">{{.Title}}</a></td>
             <td>{{.Status}}</td>
             <td>{{.Date.Format "2. Januar, 3:04 Uhr"}}</td>
-            <td><input type="button" value="Checked"></td>
+            <td><a href="/reset?title={{.Title}}">Reset</a></td>
           </tr>
         {{end}}
       </tbody>
