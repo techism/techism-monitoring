@@ -6,6 +6,7 @@ import (
     "text/template"
     "net/http"
     "time"
+    "fmt"
 )
 
 var (
@@ -22,9 +23,9 @@ func init() {
 //shows all sites from the database
 func root(w http.ResponseWriter, r *http.Request) {
     c := appengine.NewContext(r)
-    q := datastore.NewQuery("Site").Order("-Date").Limit(10)
-    sites := make([]Site, 0, 10)
-    if _, err := q.GetAll(c, &sites); err != nil {
+    sites, _, err := get_all_sites(c)
+
+    if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
         return
     }
@@ -88,5 +89,23 @@ func reset(w http.ResponseWriter, r *http.Request){
 
 func add(w http.ResponseWriter, r *http.Request){
 	//TODO
-	root(w, r);
+    title := r.FormValue("title")
+    url := r.FormValue("url")
+
+	c := appengine.NewContext(r)
+    g := &Site{
+		Title: title,
+		Url:   url,
+	}
+
+    if _, err := datastore.Put(c, datastore.NewIncompleteKey(c, "Site", nil), g);
+    err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        fmt.Println(err)
+		return
+	}
+    
+    //check_site_status(*g, r)
+    datastore.Put(c, datastore.NewIncompleteKey(c, "Site", nil), g);
+	http.Redirect(w, r, "/", http.StatusFound);
 }

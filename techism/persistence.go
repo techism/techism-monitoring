@@ -25,3 +25,10 @@ func get_site_by_title (title string, c appengine.Context)(Site, *datastore.Key,
     key := keys[0]
     return site, key, nil
 }
+
+func get_all_sites (c appengine.Context)([]Site, []*datastore.Key, error){
+	q := datastore.NewQuery("Site").Order("-Date").Limit(500)
+    sites := make([]Site, 0, 500)
+    keys, err := q.GetAll(c, &sites);
+    return sites, keys, err
+}
