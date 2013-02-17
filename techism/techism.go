@@ -13,6 +13,7 @@ var (
 	statusTemplate = template.Must(template.ParseFiles("status.html"))
 	)
 
+
 func init() {
     http.HandleFunc("/", root)
     http.HandleFunc("/check", check_all)
@@ -20,11 +21,10 @@ func init() {
     http.HandleFunc("/add", add)
 }
 
+
 //shows all sites from the database
 func root(w http.ResponseWriter, r *http.Request) {
-    c := appengine.NewContext(r)
-    sites, _, err := get_all_sites(c)
-
+    sites, _, err := get_all_sites(r)
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
         return
@@ -35,19 +35,18 @@ func root(w http.ResponseWriter, r *http.Request) {
     }
 }
 
+
 //checks a sites with status = OK
 func check_all(w http.ResponseWriter, r *http.Request){
     c := appengine.NewContext(r)
-    //TODO also filter Status = "ERROR"
-    q := datastore.NewQuery("Site").Filter("Status =", "OK").Order("-Date").Limit(10)
-    sites := make([]Site, 0, 10)
-    keys, err := q.GetAll(c, &sites);
+    sites, keys, err := get_sites_with_status_error_or_ok(c)
+    
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
         return
     }
     for index, site := range sites {
-    	check_site_status(site, r)
+    	check_site_status(&site, r)
     	_, err := datastore.Put(c, keys[index], &site);
     	if err != nil {
     		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -59,6 +58,7 @@ func check_all(w http.ResponseWriter, r *http.Request){
         return
     }
 }
+
 
 //resets status and checksum of a given site
 func reset(w http.ResponseWriter, r *http.Request){
@@ -87,25 +87,20 @@ func reset(w http.ResponseWriter, r *http.Request){
 	root(w, r);
 }
 
+
 func add(w http.ResponseWriter, r *http.Request){
-	//TODO
     title := r.FormValue("title")
     url := r.FormValue("url")
-
-	c := appengine.NewContext(r)
-    g := &Site{
+    site := &Site{
 		Title: title,
 		Url:   url,
 	}
-
-    if _, err := datastore.Put(c, datastore.NewIncompleteKey(c, "Site", nil), g);
+    check_site_status(site, r)
+    if _, err := save_new_site(site, r)
     err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
         fmt.Println(err)
 		return
 	}
-    
-    //check_site_status(*g, r)
-    datastore.Put(c, datastore.NewIncompleteKey(c, "Site", nil), g);
 	http.Redirect(w, r, "/", http.StatusFound);
 }

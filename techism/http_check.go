@@ -11,7 +11,7 @@ import (
     "time"
 )
 
-func check_site_status(value Site, r *http.Request){
+func check_site_status(value *Site, r *http.Request){
     body,err := get_html_body(value.Url, r)
     if err != "" {
         value.Status = "ERROR"
