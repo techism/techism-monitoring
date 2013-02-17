@@ -72,10 +72,6 @@ func check_all(w http.ResponseWriter, r *http.Request){
         		return
     		}
     	}
-    	if err := statusTemplate.Execute(w, sites); err != nil {
-            http.Error(w, err.Error(), http.StatusInternalServerError)
-            return
-        }
     }
 }
 

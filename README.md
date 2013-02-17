@@ -8,6 +8,7 @@ Prerequisites
 * App Engine SDK for Go: https://developers.google.com/appengine/downloads
 * PATH:
 
+
     export PATH=/home/ck/techism/google_appengine/:$PATH
 
 
@@ -18,6 +19,11 @@ Running the application
     dev_appserver.py techism-go/ --clear_datastore
 
 
+Deployment
+----------
+
+    appcfg.py --oauth2 update techism-go/
+    
 
 Weblinks
 --------
