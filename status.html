@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="static/css/style.css">
+  </head>
   <body>
     
       <table>
         <thead>
-          <th>Gruppe</th>
+          <th>Seite</th>
           <th>Status</th>
           <th>Letzte Änderung/Letzter Reset</th>
           <th></th>
@@ -14,8 +17,8 @@
             <tr>
               <td><a href="{{.Url}}">{{.Title}}</a></td>
               <td>{{.Status}}</td>
-              <td>{{.Date.Format "2. Januar, 3:04 Uhr"}}</td>
-              <td><a href="/reset?title={{.Title}}">Reset</a></td>
+              <td>{{.Date.Format "2. Januar, 13:04 Uhr"}}</td>
+              <td><a href="/reset?title={{.Title}}">Zur&uuml;cksetzen</a></td>
             </tr>
           {{end}}
         </tbody>
@@ -23,9 +26,9 @@
     
     <br/>
     <form action="add" method="get">
-        Title: <input type="text" name="title">
+        Titel: <input type="text" name="title">
         Url: <input type="text" name="url">
-        <input type="submit" value="Create">
+        <input type="submit" value="Hinzuf&uuml;gen">
     </form>
   </body>
 </html>

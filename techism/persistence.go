@@ -37,7 +37,7 @@ func get_sites_with_status_error_or_ok (c appengine.Context)([]Site, []*datastor
 
 func get_all_sites (r *http.Request)([]Site, []*datastore.Key, error){
     c := appengine.NewContext(r)
-	q := datastore.NewQuery("Site").Order("-Date").Limit(500)
+	q := datastore.NewQuery("Site").Order("-Title").Limit(500)
     sites := make([]Site, 0, 500)
     keys, err := q.GetAll(c, &sites);
     return sites, keys, err

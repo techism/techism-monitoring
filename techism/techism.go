@@ -29,7 +29,7 @@ func root(w http.ResponseWriter, r *http.Request) {
     u := user.Current(c)
     if u == nil {
         url, _ := user.LoginURL(c, "/")
-        fmt.Fprintf(w, `<a href="%s">Sign in or register</a>`, url)
+        fmt.Fprintf(w, `<a href="%s">Sign in</a>`, url)
         return
     }
 
@@ -53,7 +53,7 @@ func check_all(w http.ResponseWriter, r *http.Request){
     u := user.Current(c)
     if u == nil {
         url, _ := user.LoginURL(c, "/")
-        fmt.Fprintf(w, `<a href="%s">Sign in or register</a>`, url)
+        fmt.Fprintf(w, `<a href="%s">Sign in</a>`, url)
         return
     }
 
@@ -82,7 +82,7 @@ func reset(w http.ResponseWriter, r *http.Request){
     u := user.Current(c)
     if u == nil {
         url, _ := user.LoginURL(c, "/")
-        fmt.Fprintf(w, `<a href="%s">Sign in or register</a>`, url)
+        fmt.Fprintf(w, `<a href="%s">Sign in</a>`, url)
         return
     }
 
@@ -108,7 +108,7 @@ func reset(w http.ResponseWriter, r *http.Request){
     	}
     	site.Date = time.Now()
     	datastore.Put(c, key, &site);
-    	root(w, r);
+    	http.Redirect(w, r, "/", http.StatusFound);
     }
 }
 
@@ -118,7 +118,7 @@ func add(w http.ResponseWriter, r *http.Request){
     u := user.Current(c)
     if u == nil {
         url, _ := user.LoginURL(c, "/")
-        fmt.Fprintf(w, `<a href="%s">Sign in or register</a>`, url)
+        fmt.Fprintf(w, `<a href="%s">Sign in</a>`, url)
         return
     }
 
