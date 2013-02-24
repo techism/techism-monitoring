@@ -2,7 +2,6 @@ package techism
 
 import (
     "appengine"
-    "appengine/datastore"
     "appengine/user"
     "text/template"
     "net/http"
@@ -34,7 +33,7 @@ func root(w http.ResponseWriter, r *http.Request) {
     }
 
     if u.Admin {
-        sites, _, err := get_all_sites(r)
+        sites, _, err := get_all_sites(c)
         if err != nil {
             http.Error(w, err.Error(), http.StatusInternalServerError)
             return
@@ -66,9 +65,13 @@ func check_all(w http.ResponseWriter, r *http.Request){
         }
         for index, site := range sites {
         	check_site_status(&site, r)
-        	_, err := datastore.Put(c, keys[index], &site);
+            key := keys[index]
+            err := update_site (key, &site, c)
         	if err != nil {
         		http.Error(w, err.Error(), http.StatusInternalServerError)
+                fmt.Printf("key: %s", site)
+                fmt.Printf("key: %s \n", key)
+                fmt.Printf("key: %s", err.Error())
         		return
     		}
     	}
@@ -107,7 +110,7 @@ func reset(w http.ResponseWriter, r *http.Request){
         	site.Status = "OK"
     	}
     	site.Date = time.Now()
-    	datastore.Put(c, key, &site);
+        update_site (key, &site, c )
     	http.Redirect(w, r, "/", http.StatusFound);
     }
 }
@@ -130,7 +133,7 @@ func add(w http.ResponseWriter, r *http.Request){
     		Url:   url,
     	}
         check_site_status(site, r)
-        if _, err := save_new_site(site, r)
+        if _, err := save_new_site(site, c)
         err != nil {
             http.Error(w, err.Error(), http.StatusInternalServerError)
             fmt.Println(err)
