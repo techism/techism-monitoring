@@ -9,6 +9,7 @@ import (
     "fmt"   
     "strconv"
     "time"
+    "regexp"
 )
 
 func check_site_status(value *Site, r *http.Request){
@@ -50,8 +51,25 @@ func get_html_body(url string, r *http.Request)(string, string) {
 }
 
 func calculate_checksum(body string) (string){
+    //remove confluence fields
+    body = remove_meta_fields (body)
+    body = remove_hidden_fields (body)
 	fnv_sum := fnv.New64()
 	fnv_sum.Write([]byte(body))
 	checksum := fnv_sum.Sum64()
 	return strconv.FormatUint(checksum, 16)
+}
+
+func remove_meta_fields (body string) (string){
+    //TODO replace with exp/html as soon as it's bundled with appengine
+    regex, _ := regexp.Compile("<meta .*>")
+    result := regex.ReplaceAllString(body, "")
+    return result
+}
+
+func remove_hidden_fields (body string) (string){
+    //TODO replace with exp/html as soon as it's bundled with appengine
+    regex, _ := regexp.Compile("<input type=\"hidden\".*>")
+    result := regex.ReplaceAllString(body, "")
+    return result
 }
