@@ -76,7 +76,6 @@ func remove_hidden_fields (body string) (string){
     return result
 }
 
-
 func remove_comments (body string) (string){
     //TODO replace with exp/html as soon as it's bundled with appengine
     regex, _ := regexp.Compile("<!--.*-->")
