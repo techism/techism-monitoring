@@ -3,3 +3,15 @@ table, th, td
 	border: 1px solid #999;
 	border-collapse: collapse;
 }
+
+.status_OK {
+    background: #8bc43d;
+}
+
+.status_CHANGED {
+    background: #f99d04;
+}
+
+.status_ERROR {
+    background: #f92c04;
+}

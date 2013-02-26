@@ -9,14 +9,14 @@
         <thead>
           <th>Seite</th>
           <th>Status</th>
-          <th>Letzte Änderung/Letzter Reset</th>
+          <th>Letzte Änderung/Letzter Check</th>
           <th></th>
         </thead>
         <tbody>
           {{range .}}
             <tr>
               <td><a href="{{.Url}}">{{.Title}}</a></td>
-              <td>{{.Status}}</td>
+              <td class="status_{{.Status}}">{{.Status}}</td>
               <td>{{.Date.Format "2. Januar, 11:04 Uhr"}}</td>
               <td><a href="/reset?title={{.Title}}">Zur&uuml;cksetzen</a></td>
             </tr>
