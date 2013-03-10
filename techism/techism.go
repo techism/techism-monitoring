@@ -32,10 +32,12 @@ func (fn appHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     }
 
     if u.Admin {
+        w.Header().Set("Content-Security-Policy", "default-src 'self'")
         if err := fn(c, w, r); err != nil {
             fmt.Println(err)
             http.Error(w, err.Error(), http.StatusInternalServerError)
         }
+        
     }
 }
 
