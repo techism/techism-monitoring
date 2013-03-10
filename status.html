@@ -4,7 +4,7 @@
     <link rel="stylesheet" type="text/css" href="static/css/style.css">
   </head>
   <body>
-    
+      <h2>User Group Status Board</h2>
       <table>
         <thead>
           <th>Seite</th>
@@ -17,7 +17,7 @@
             <tr>
               <td><a href="{{.Url}}">{{.Title}}</a></td>
               <td class="status_{{.Status}}">{{.Status}}</td>
-              <td>{{.Date.Format "2006-01-01 15:00:05"}}</td>
+              <td>{{.Date.Format "Jan 2 15:04:05"}}</td>
 
               <td><a href="/reset?title={{.Title}}">Zur&uuml;cksetzen</a></td>
             </tr>

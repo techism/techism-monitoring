@@ -5,11 +5,11 @@ table, th, td
 }
 
 .status_OK {
-    background: #8bc43d;
+    background: #aacc00;
 }
 
 .status_CHANGED {
-    background: #f99d04;
+    background: #ffd320;
 }
 
 .status_ERROR {

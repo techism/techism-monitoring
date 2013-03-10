@@ -62,6 +62,7 @@ func check_all(c appengine.Context, w http.ResponseWriter, r *http.Request) erro
     }
     for index, site := range sites {
       	check_site_status(&site, r)
+        
         key := keys[index]
         err := update_site (key, &site, c)
       	if err != nil {

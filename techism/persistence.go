@@ -28,8 +28,8 @@ func get_site_by_title (title string, c appengine.Context)(Site, *datastore.Key,
 
 func get_sites_with_status_error_or_ok (c appengine.Context)([]Site, []*datastore.Key, error){
     //TODO also filter Status = "ERROR"
-    q := datastore.NewQuery("Site").Filter("Status =", "OK").Order("-Date").Limit(10)
-    sites := make([]Site, 0, 10)
+    q := datastore.NewQuery("Site").Filter("Status =", "OK").Order("-Date").Limit(100)
+    sites := make([]Site, 0, 100)
     keys, err := q.GetAll(c, &sites);
     return sites, keys, err
 }

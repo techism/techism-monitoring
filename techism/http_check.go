@@ -30,6 +30,7 @@ func check_site_status(value *Site, r *http.Request){
         }
     }
     value.Date = time.Now()
+    
 }
 
 
@@ -54,8 +55,9 @@ func calculate_checksum(body string) (string){
     //remove confluence fields
     body = remove_meta_fields (body)
     body = remove_hidden_fields (body)
-    //remove comments
+
     body = remove_comments (body)
+    body = remove_images (body)
 	fnv_sum := fnv.New64()
 	fnv_sum.Write([]byte(body))
 	checksum := fnv_sum.Sum64()
@@ -79,6 +81,13 @@ func remove_hidden_fields (body string) (string){
 func remove_comments (body string) (string){
     //TODO replace with exp/html as soon as it's bundled with appengine
     regex, _ := regexp.Compile("<!--.*-->")
+    result := regex.ReplaceAllString(body, "")
+    return result
+}
+
+func remove_images (body string) (string){
+    //TODO replace with exp/html as soon as it's bundled with appengine
+    regex, _ := regexp.Compile("<img .*>")
     result := regex.ReplaceAllString(body, "")
     return result
 }
