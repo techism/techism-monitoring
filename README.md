@@ -1,5 +1,5 @@
-techism-go
-==========
+techism-monitoring
+==================
 
 Utility App for Techism to check the status of User Group Websites.
 
@@ -15,14 +15,14 @@ Prerequisites
 Running the application
 -----------------------
 
-    dev_appserver.py techism-go
-    dev_appserver.py techism-go/ --clear_datastore
+    dev_appserver.py techism-monitoring
+    dev_appserver.py techism-monitoring/ --clear_datastore
 
 
 Deployment
 ----------
 
-    appcfg.py --oauth2 update techism-go/
+    appcfg.py --oauth2 update techism-monitoring/
     
 
 Weblinks
