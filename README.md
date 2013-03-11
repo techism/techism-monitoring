@@ -19,6 +19,17 @@ Running the application
     dev_appserver.py techism-monitoring/ --clear_datastore
 
 
+Running Tests
+--------------
+* https://github.com/icub3d/appenginetesting can't be installed with GAE 1.7.5
+* Brute Force Method
+    * Download the full-fledged Go SDK: https://code.google.com/p/go/downloads/list
+    * Copy files from goroot/src/cmd/cgo to the AppEngine SDK
+    * Run: 
+        * cd techism-monitoring/techism
+        * go test http_check_test.go http_check.go persistence.go
+
+
 Deployment
 ----------
 
