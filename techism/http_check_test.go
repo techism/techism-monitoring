@@ -4,36 +4,47 @@ import (
     "testing"
 )
 
-const text = "This is a text without any tags"
+const plainText = "This is a text without any tags"
+const aHrefText = "<p> 7. March 2013 <br> @ <a href=\"http://www.munichjs.org\">MunichJS</a> Coworking </p>"
 
-func TestRemoveNoImages(t *testing.T) {
-    neu := remove_images(text)
-    if text != neu {
-        t.Fatalf("Remove images failed")
-    }
+func TestRemoveImages(t *testing.T) {
+    neu1 := remove_images(plainText)
+    assertTrue (plainText, neu1, t)
+
+    neu2 := remove_images(aHrefText)
+    assertTrue (aHrefText, neu2, t)
 }
 
 
-func TestRemoveNoComments(t *testing.T) {
-    neu := remove_comments(text)
-    if text != neu {
-        t.Fatalf("Remove comments failed")
-    }
+func TestRemoveComments(t *testing.T) {
+    neu1 := remove_comments(plainText)
+    assertTrue (plainText, neu1, t)
+
+     neu2 := remove_comments (aHrefText)
+    assertTrue (aHrefText, neu2, t)
 }
 
 
-func TestRemoveNoHiddenFields(t *testing.T) {
-    neu := remove_hidden_fields(text)
-    if text != neu {
-        t.Fatalf("Remove hidden fields failed")
-    }
+func TestRemoveHiddenFields(t *testing.T) {
+    neu1 := remove_hidden_fields(plainText)
+    assertTrue (plainText, neu1, t)
+
+    neu2 := remove_hidden_fields (aHrefText)
+    assertTrue (aHrefText, neu2, t)
 }
 
 
-func TestRemoveNoMetaFields(t *testing.T) {
-    neu := remove_meta_fields(text)
-    if text != neu {
-        t.Fatalf("Remove meta fields failed")
+func TestRemoveMetaFields(t *testing.T) {
+    neu1 := remove_meta_fields(plainText)
+    assertTrue (plainText, neu1, t)
+
+    neu2 := remove_meta_fields (aHrefText)
+    assertTrue (aHrefText, neu2, t)
+}
+
+func assertTrue (str1 string, str2 string, t *testing.T){
+    if str1 != str2 {
+        t.Fatalf("Test failed: " + str1 + " != " + str2)
     }
 }
 
