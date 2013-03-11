@@ -42,3 +42,5 @@ Weblinks
 * http://tour.golang.org/
 * https://developers.google.com/appengine/docs/go/
 * https://developers.google.com/appengine/docs/go/datastore/reference
+
+* http://talks.golang.org/2012/concurrency.slide#47
