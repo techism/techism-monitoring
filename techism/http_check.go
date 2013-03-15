@@ -17,7 +17,9 @@ func check_site_status(value *Site, r *http.Request){
     if err != "" {
         value.Status = "ERROR"
     } else {
-        checksum := calculate_checksum(body)
+        cleaned_up_body := clean_up_body (body)
+        fmt.Println (cleaned_up_body)
+        checksum := calculate_checksum(cleaned_up_body)
         if value.Checksum == "" {
             value.Checksum = checksum;
             value.Status = "OK"
@@ -51,7 +53,7 @@ func get_html_body(url string, r *http.Request)(string, string) {
 	return string(body), ""
 }
 
-func calculate_checksum(body string) (string){
+func clean_up_body (body string) (string){
     //remove confluence fields
     body = remove_meta_fields (body)
     body = remove_hidden_fields (body)
@@ -60,6 +62,11 @@ func calculate_checksum(body string) (string){
     body = remove_images (body)
     body = remove_parameters(body)
     body = remove_iframes (body)
+
+    return body
+}
+
+func calculate_checksum(body string) (string){
 	fnv_sum := fnv.New64()
 	fnv_sum.Write([]byte(body))
 	checksum := fnv_sum.Sum64()
@@ -89,7 +96,7 @@ func remove_comments (body string) (string){
 
 func remove_iframes (body string) (string){
     //TODO replace with exp/html as soon as it's bundled with appengine
-    regex, _ := regexp.Compile("<iframe .*iframe>")
+    regex, _ := regexp.Compile("(?s)<iframe.*iframe>")
     result := regex.ReplaceAllString(body, "")
     return result
 }
