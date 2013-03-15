@@ -77,10 +77,20 @@ func TestIFrame (t *testing.T){
                             scrolling="no"
                             frameBorder="no"
                             allowtransparency="false">
-</iframe>`
+              </iframe>`
     stripped := ""
     orig = clean_up_body (orig)
-    fmt.Println (orig)
+    
+    check1 := calculate_checksum (orig)
+    check2 := calculate_checksum (stripped)
+    assertEquals (check1, check2, t)
+}
+
+func TestParameterJsessionid (t *testing.T){
+    orig := "<li><a href=\"/contact.html;jsessionid=BD7979B9FDA4630569C84DA2FE7B662C\" style=\"text-decoration:none;width:36px;display:block;\">Kontakt</a></li>"
+    stripped := "<li><a href=\"/contact.html;\" style=\"text-decoration:none;width:36px;display:block;\">Kontakt</a></li>"
+    orig = clean_up_body (orig) 
+    fmt.Println (orig)   
     check1 := calculate_checksum (orig)
     check2 := calculate_checksum (stripped)
     assertEquals (check1, check2, t)

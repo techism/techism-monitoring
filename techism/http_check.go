@@ -75,28 +75,28 @@ func calculate_checksum(body string) (string){
 
 func remove_meta_fields (body string) (string){
     //TODO replace with exp/html as soon as it's bundled with appengine
-    regex, _ := regexp.Compile("<meta .*>")
+    regex, _ := regexp.Compile("<meta .*?>")
     result := regex.ReplaceAllString(body, "")
     return result
 }
 
 func remove_hidden_fields (body string) (string){
     //TODO replace with exp/html as soon as it's bundled with appengine
-    regex, _ := regexp.Compile("<input type=\"hidden\".*>")
+    regex, _ := regexp.Compile("<input type=\"hidden\".*?>")
     result := regex.ReplaceAllString(body, "")
     return result
 }
 
 func remove_comments (body string) (string){
     //TODO replace with exp/html as soon as it's bundled with appengine
-    regex, _ := regexp.Compile("<!--.*-->")
+    regex, _ := regexp.Compile("<!--.*?-->")
     result := regex.ReplaceAllString(body, "")
     return result
 }
 
 func remove_iframes (body string) (string){
     //TODO replace with exp/html as soon as it's bundled with appengine
-    regex, _ := regexp.Compile("(?s)<iframe.*iframe>")
+    regex, _ := regexp.Compile("(?s)<iframe.*?iframe>")
     result := regex.ReplaceAllString(body, "")
     return result
 }
@@ -104,21 +104,21 @@ func remove_iframes (body string) (string){
 func remove_images (body string) (string){
     //TODO replace with exp/html as soon as it's bundled with appengine
     //gi
-    regex, _ := regexp.Compile("<img .* alt=\"Bild\" />")
+    regex, _ := regexp.Compile("<img .*?/>")
     result := regex.ReplaceAllString(body, "")
-    //architektur
-    regex2, _ := regexp.Compile("<img .* alt=\"\" />")
-    result2 := regex2.ReplaceAllString(result, "")
-    return result2
+    return result
 }
 
 func remove_parameters (body string) (string){
     //TODO replace with exp/html as soon as it's bundled with appengine
-    regex, _ := regexp.Compile("sectok=[a-f0-9]*")
+    regex, _ := regexp.Compile("sectok=[a-fA-F0-9]*")
     result := regex.ReplaceAllString(body, "")
 
-    regex2, _ := regexp.Compile("sid=[a-f0-9]*")
+    regex2, _ := regexp.Compile("sid=[a-fA-F0-9]*")
     result2 := regex2.ReplaceAllString(result, "")
+
+    regex3, _ := regexp.Compile("jsessionid=[a-fA-F0-9]*")
+    result3 := regex3.ReplaceAllString(result2, "")
     
-    return result2
+    return result3
 }
