@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	statusTemplate = template.Must(template.ParseFiles("status.html"))
+	statusTemplate = template.Must(template.New("status.html").Funcs(fns).ParseFiles("status.html"))
 	)
 
 type appHandler func (c appengine.Context, w http.ResponseWriter, r *http.Request) error
@@ -111,4 +111,13 @@ func add(c appengine.Context, w http.ResponseWriter, r *http.Request) error {
    	}
    	http.Redirect(w, r, "/", http.StatusFound);
     return nil
+}
+
+var fns = template.FuncMap{
+	"odd": func(x int) bool {
+		return x % 2 == 1
+	},
+	"even": func(x int) bool {
+		return x % 2 == 0
+	},
 }

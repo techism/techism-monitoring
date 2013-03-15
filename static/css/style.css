@@ -1,7 +1,11 @@
-table, th, td
+table 
 {
-	border: 1px solid #999;
-	border-collapse: collapse;
+    padding: 50px;
+}
+
+table.left 
+{
+    float: left;
 }
 
 .status_OK {
