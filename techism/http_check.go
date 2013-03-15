@@ -58,6 +58,8 @@ func calculate_checksum(body string) (string){
 
     body = remove_comments (body)
     body = remove_images (body)
+    body = remove_parameters(body)
+    body = remove_iframes (body)
 	fnv_sum := fnv.New64()
 	fnv_sum.Write([]byte(body))
 	checksum := fnv_sum.Sum64()
@@ -85,9 +87,31 @@ func remove_comments (body string) (string){
     return result
 }
 
-func remove_images (body string) (string){
+func remove_iframes (body string) (string){
     //TODO replace with exp/html as soon as it's bundled with appengine
-    regex, _ := regexp.Compile("<img .*>")
+    regex, _ := regexp.Compile("<iframe .*iframe>")
     result := regex.ReplaceAllString(body, "")
     return result
+}
+
+func remove_images (body string) (string){
+    //TODO replace with exp/html as soon as it's bundled with appengine
+    //gi
+    regex, _ := regexp.Compile("<img .* alt=\"Bild\" />")
+    result := regex.ReplaceAllString(body, "")
+    //architektur
+    regex2, _ := regexp.Compile("<img .* alt=\"\" />")
+    result2 := regex2.ReplaceAllString(result, "")
+    return result2
+}
+
+func remove_parameters (body string) (string){
+    //TODO replace with exp/html as soon as it's bundled with appengine
+    regex, _ := regexp.Compile("sectok=[a-f0-9]*")
+    result := regex.ReplaceAllString(body, "")
+
+    regex2, _ := regexp.Compile("sid=[a-f0-9]*")
+    result2 := regex2.ReplaceAllString(result, "")
+    
+    return result2
 }
