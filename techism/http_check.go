@@ -10,6 +10,7 @@ import (
     "strconv"
     "time"
     "regexp"
+    "strings"
 )
 
 func check_site_status(value *Site, r *http.Request){
@@ -17,7 +18,8 @@ func check_site_status(value *Site, r *http.Request){
     if err != "" {
         value.Status = "ERROR"
     } else {
-        cleaned_up_body := clean_up_body (body)
+        fmt.Println(value.Url)
+        cleaned_up_body := clean_up_body (body, value.Url)
         checksum := calculate_checksum(cleaned_up_body)
         if value.Checksum == "" {
             value.Checksum = checksum;
@@ -52,16 +54,24 @@ func get_html_body(url string, r *http.Request)(string, string) {
 	return string(body), ""
 }
 
-func clean_up_body (body string) (string){
+func clean_up_body (body string, url string) (string){
     //remove confluence fields
     body = remove_meta_fields (body)
     body = remove_hidden_fields (body)
 
     body = remove_comments (body)
     body = remove_images (body)
-    body = remove_parameters(body)
+    body = remove_sessionids_and_csrftoken(body)
     body = remove_iframes (body)
-
+    //specific checks
+    if(strings.Contains(url, "it-szene")){
+        fmt.Println ("it-szene")
+        body = remove_chars_itszene (body)
+    }
+    if(strings.Contains(url, "freifunk")){
+        fmt.Println ("freifunk")
+        body = remove_chars_freifunk (body)
+    }
     return body
 }
 
@@ -107,7 +117,7 @@ func remove_images (body string) (string){
     return result
 }
 
-func remove_parameters (body string) (string){
+func remove_sessionids_and_csrftoken (body string) (string){
     //TODO replace with exp/html as soon as it's bundled with appengine
     regex, _ := regexp.Compile("sectok=[a-fA-F0-9]*")
     result := regex.ReplaceAllString(body, "")
@@ -117,6 +127,20 @@ func remove_parameters (body string) (string){
 
     regex3, _ := regexp.Compile("jsessionid=[a-fA-F0-9]*")
     result3 := regex3.ReplaceAllString(result2, "")
-    
+
     return result3
+}
+
+func remove_chars_itszene (body string) (string){
+    //TODO replace with exp/html as soon as it's bundled with appengine
+    regex, _ := regexp.Compile("MttgSession[\\s]?=[\\s]?[a-fA-F0-9]*")
+    result := regex.ReplaceAllString(body, "")
+    return result
+}
+
+func remove_chars_freifunk (body string) (string){
+    //TODO replace with exp/html as soon as it's bundled with appengine
+    regex, _ := regexp.Compile("<li id=\"viewcount\">.*?</li>")
+    result := regex.ReplaceAllString(body, "")
+    return result
 }

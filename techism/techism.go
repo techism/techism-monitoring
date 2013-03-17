@@ -87,7 +87,7 @@ func reset(c appengine.Context, w http.ResponseWriter, r *http.Request) error {
     if err3 != "" {
    		site.Status = "ERROR"
     } else {
-        cleaned_up_body := clean_up_body (html_body)
+        cleaned_up_body := clean_up_body (html_body, site.Url)
        	site.Checksum = calculate_checksum (cleaned_up_body)
        	site.Status = "OK"
   	}
