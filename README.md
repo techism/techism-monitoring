@@ -42,5 +42,6 @@ Weblinks
 * http://tour.golang.org/
 * https://developers.google.com/appengine/docs/go/
 * https://developers.google.com/appengine/docs/go/datastore/reference
+* https://github.com/StefanSchroeder/Golang-Regex-Tutorial
 
 * http://talks.golang.org/2012/concurrency.slide#47

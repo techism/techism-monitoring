@@ -2,7 +2,6 @@ package techism
 
 import (
     "testing"
-    "fmt"
 )
 
 const plainText = "This is a text without any tags"
@@ -80,7 +79,6 @@ func TestIFrame (t *testing.T){
               </iframe>`
     stripped := ""
     orig = clean_up_body (orig)
-    
     check1 := calculate_checksum (orig)
     check2 := calculate_checksum (stripped)
     assertEquals (check1, check2, t)
@@ -90,7 +88,35 @@ func TestParameterJsessionid (t *testing.T){
     orig := "<li><a href=\"/contact.html;jsessionid=BD7979B9FDA4630569C84DA2FE7B662C\" style=\"text-decoration:none;width:36px;display:block;\">Kontakt</a></li>"
     stripped := "<li><a href=\"/contact.html;\" style=\"text-decoration:none;width:36px;display:block;\">Kontakt</a></li>"
     orig = clean_up_body (orig) 
-    fmt.Println (orig)   
+    check1 := calculate_checksum (orig)
+    check2 := calculate_checksum (stripped)
+    assertEquals (check1, check2, t)
+}
+
+func TestComments1 (t *testing.T){
+     orig := `<div class="wrapper">
+      <div id="topbar">
+        <div class="fl_left">
+            <!--
+            <span style="color:#222">News:</span>
+            <a href="/article/next_meeting_1_december.ejs">Upcoming meeting: 1. December 2011 @ TNG Technology Consulting, Unterföhring.</a>
+            -->
+        </div>`
+    stripped := `<div class="wrapper">
+      <div id="topbar">
+        <div class="fl_left">
+            
+        </div>`
+    orig = clean_up_body (orig) 
+    check1 := calculate_checksum (orig)
+    check2 := calculate_checksum (stripped)
+    assertEquals (check1, check2, t) 
+}
+
+func TestComments2 (t *testing.T){
+     orig := `<!-- 30 queries. 0.351 seconds. -->`
+    stripped := ``
+    orig = clean_up_body (orig) 
     check1 := calculate_checksum (orig)
     check2 := calculate_checksum (stripped)
     assertEquals (check1, check2, t)

@@ -18,7 +18,6 @@ func check_site_status(value *Site, r *http.Request){
         value.Status = "ERROR"
     } else {
         cleaned_up_body := clean_up_body (body)
-        fmt.Println (cleaned_up_body)
         checksum := calculate_checksum(cleaned_up_body)
         if value.Checksum == "" {
             value.Checksum = checksum;
@@ -89,7 +88,7 @@ func remove_hidden_fields (body string) (string){
 
 func remove_comments (body string) (string){
     //TODO replace with exp/html as soon as it's bundled with appengine
-    regex, _ := regexp.Compile("<!--.*?-->")
+    regex, _ := regexp.Compile("(?s)<!--.*?-->")
     result := regex.ReplaceAllString(body, "")
     return result
 }
@@ -103,7 +102,6 @@ func remove_iframes (body string) (string){
 
 func remove_images (body string) (string){
     //TODO replace with exp/html as soon as it's bundled with appengine
-    //gi
     regex, _ := regexp.Compile("<img .*?/>")
     result := regex.ReplaceAllString(body, "")
     return result
