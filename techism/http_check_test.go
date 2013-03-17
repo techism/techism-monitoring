@@ -34,6 +34,8 @@ func TestRemoveHiddenFields(t *testing.T) {
 }
 
 
+
+
 func TestRemoveMetaFields(t *testing.T) {
     neu1 := remove_meta_fields(plainText)
     assertEquals (plainText, neu1, t)
@@ -42,11 +44,13 @@ func TestRemoveMetaFields(t *testing.T) {
     assertEquals (aHrefText, neu2, t)
 }
 
+
 func TestSecTok (t *testing.T){
     orig := "<div class=\"no\"><input type=\"hidden\" name=\"do\" /><input type=\"hidden\" name=\"sectok\" value=\"1234\" />"
     stripped := "<div class=\"no\">"
     check_body (orig, stripped, t)
 }
+
 
 func TestImg (t *testing.T){
     orig := "<a href=\"mhw.cgi?page=12345\"><img src=\"/gi/images/bild/muc3.jpg\" border=\"0\" width=\"750\" alt=\"Bild\" /></a>"
@@ -54,17 +58,20 @@ func TestImg (t *testing.T){
     check_body (orig, stripped, t)
 }
 
+
 func TestArch1 (t *testing.T){
     orig := "<img src=\"/lib/exe/indexer.php?id=main&amp;1362946031\" width=\"2\" height=\"1\" alt=\"\" /></div>"
     stripped := "</div>"
     check_body (orig, stripped, t)
 }
 
+
 func TestArch2 (t *testing.T){
     orig := "</a><a href=\"/main?do=login&amp;sectok=12345\"  class=\"action login\" rel=\"nofollow\" title=\"Anmelden\">Anmelden</a></div>"
     stripped := "</a><a href=\"/main?do=login&amp;\"  class=\"action login\" rel=\"nofollow\" title=\"Anmelden\">Anmelden</a></div>"
     check_body (orig, stripped, t)
 }
+
 
 func TestIFrame (t *testing.T){
     orig := `<iframe
@@ -78,11 +85,13 @@ func TestIFrame (t *testing.T){
     check_body (orig, stripped, t)
 }
 
+
 func TestParameterJsessionid (t *testing.T){
     orig := "<li><a href=\"/contact.html;jsessionid=12345\" style=\"text-decoration:none;width:36px;display:block;\">Kontakt</a></li>"
     stripped := "<li><a href=\"/contact.html;\" style=\"text-decoration:none;width:36px;display:block;\">Kontakt</a></li>"
     check_body (orig, stripped, t)
 }
+
 
 func TestComments1 (t *testing.T){
      orig := `<div class="wrapper">
@@ -101,11 +110,13 @@ func TestComments1 (t *testing.T){
     check_body (orig, stripped, t) 
 }
 
+
 func TestComments2 (t *testing.T){
     orig := `<!-- 30 queries. 0.351 seconds. -->`
     stripped := ``
     check_body (orig, stripped, t)
 }
+
 
 func check_body (orig string, stripped string, t *testing.T){
     orig = clean_up_body (orig, "http://www.example.com") 
@@ -113,6 +124,7 @@ func check_body (orig string, stripped string, t *testing.T){
     check2 := calculate_checksum (stripped)
     assertEquals (check1, check2, t)
 }
+
 
 func assertEquals (str1 string, str2 string, t *testing.T){
     if str1 != str2 {

@@ -13,6 +13,7 @@ import (
     "strings"
 )
 
+
 func check_site_status(value *Site, r *http.Request){
     body,err := get_html_body(value.Url, r)
     if err != "" {
@@ -33,7 +34,6 @@ func check_site_status(value *Site, r *http.Request){
         }
     }
     value.Date = time.Now()
-    
 }
 
 
@@ -54,8 +54,8 @@ func get_html_body(url string, r *http.Request)(string, string) {
 	return string(body), ""
 }
 
+
 func clean_up_body (body string, url string) (string){
-    //remove confluence fields
     body = remove_meta_fields (body)
     body = remove_hidden_fields (body)
 
@@ -65,15 +65,15 @@ func clean_up_body (body string, url string) (string){
     body = remove_iframes (body)
     //specific checks
     if(strings.Contains(url, "it-szene")){
-        fmt.Println ("it-szene")
         body = remove_chars_itszene (body)
-    }
-    if(strings.Contains(url, "freifunk")){
-        fmt.Println ("freifunk")
+    } else if(strings.Contains(url, "freifunk")){
         body = remove_chars_freifunk (body)
-    }
+    } else if(strings.Contains(url, "owasp") || strings.Contains(url, "ottobrunn")){
+        body = remove_chars_owasp (body)
+    } 
     return body
 }
+
 
 func calculate_checksum(body string) (string){
 	fnv_sum := fnv.New64()
@@ -82,43 +82,46 @@ func calculate_checksum(body string) (string){
 	return strconv.FormatUint(checksum, 16)
 }
 
-func remove_meta_fields (body string) (string){
-    //TODO replace with exp/html as soon as it's bundled with appengine
+// ----------------
+//TODO replace with exp/html as soon as it's bundled with appengine
+//-----------------
+
+func remove_meta_fields (body string) (string){    
     regex, _ := regexp.Compile("<meta .*?>")
     result := regex.ReplaceAllString(body, "")
     return result
 }
 
+
 func remove_hidden_fields (body string) (string){
-    //TODO replace with exp/html as soon as it's bundled with appengine
     regex, _ := regexp.Compile("<input type=\"hidden\".*?>")
     result := regex.ReplaceAllString(body, "")
     return result
 }
 
+
 func remove_comments (body string) (string){
-    //TODO replace with exp/html as soon as it's bundled with appengine
     regex, _ := regexp.Compile("(?s)<!--.*?-->")
     result := regex.ReplaceAllString(body, "")
     return result
 }
 
+
 func remove_iframes (body string) (string){
-    //TODO replace with exp/html as soon as it's bundled with appengine
     regex, _ := regexp.Compile("(?s)<iframe.*?iframe>")
     result := regex.ReplaceAllString(body, "")
     return result
 }
 
+
 func remove_images (body string) (string){
-    //TODO replace with exp/html as soon as it's bundled with appengine
     regex, _ := regexp.Compile("<img .*?/>")
     result := regex.ReplaceAllString(body, "")
     return result
 }
 
+
 func remove_sessionids_and_csrftoken (body string) (string){
-    //TODO replace with exp/html as soon as it's bundled with appengine
     regex, _ := regexp.Compile("sectok=[a-fA-F0-9]*")
     result := regex.ReplaceAllString(body, "")
 
@@ -128,19 +131,29 @@ func remove_sessionids_and_csrftoken (body string) (string){
     regex3, _ := regexp.Compile("jsessionid=[a-fA-F0-9]*")
     result3 := regex3.ReplaceAllString(result2, "")
 
-    return result3
+    regex4, _ := regexp.Compile("&amp;[0-9]*")
+    result4 := regex4.ReplaceAllString(result3, "")
+
+    return result4
 }
 
+
 func remove_chars_itszene (body string) (string){
-    //TODO replace with exp/html as soon as it's bundled with appengine
     regex, _ := regexp.Compile("MttgSession[\\s]?=[\\s]?[a-fA-F0-9]*")
     result := regex.ReplaceAllString(body, "")
     return result
 }
 
+
 func remove_chars_freifunk (body string) (string){
-    //TODO replace with exp/html as soon as it's bundled with appengine
     regex, _ := regexp.Compile("<li id=\"viewcount\">.*?</li>")
+    result := regex.ReplaceAllString(body, "")
+    return result
+}
+
+
+func remove_chars_owasp (body string) (string){
+    regex, _ := regexp.Compile("<li id=\"footer-info-viewcount\">.*?</li>")
     result := regex.ReplaceAllString(body, "")
     return result
 }
