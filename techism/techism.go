@@ -115,10 +115,13 @@ func add(c appengine.Context, w http.ResponseWriter, r *http.Request) error {
 }
 
 var fns = template.FuncMap{
-	"odd": func(x int) bool {
-		return x % 2 == 1
+	"r2": func(x int) bool {
+		return x % 3 == 2
 	},
-	"even": func(x int) bool {
-		return x % 2 == 0
+	"r1": func(x int) bool {
+		return x % 3 == 1
+	},
+	"r0": func(x int) bool {
+		return x % 3 == 0
 	},
 }

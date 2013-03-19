@@ -70,7 +70,11 @@ func clean_up_body (body string, url string) (string){
         body = remove_chars_freifunk (body)
     } else if(strings.Contains(url, "owasp") || strings.Contains(url, "ottobrunn")){
         body = remove_chars_owasp (body)
-    } 
+    } else if(strings.Contains(url, "jbug")){
+        body = remove_chars_jbug (body)
+    } else if(strings.Contains(url, "mactreff")){
+        body = remove_chars_mac (body)
+    }
     return body
 }
 
@@ -134,7 +138,12 @@ func remove_sessionids_and_csrftoken (body string) (string){
     regex4, _ := regexp.Compile("&amp;[0-9]*")
     result4 := regex4.ReplaceAllString(result3, "")
 
-    return result4
+    regex5, _ := regexp.Compile("jax_token_var='[a-fA-F0-9]*'")
+    result5 := regex5.ReplaceAllString(result4, "")
+
+    regex6, _ := regexp.Compile("dhx_rand=[0-9]*#")
+    result6 := regex6.ReplaceAllString(result5, "")
+    return result6
 }
 
 
@@ -154,6 +163,20 @@ func remove_chars_freifunk (body string) (string){
 
 func remove_chars_owasp (body string) (string){
     regex, _ := regexp.Compile("<li id=\"footer-info-viewcount\">.*?</li>")
+    result := regex.ReplaceAllString(body, "")
+    return result
+}
+
+
+func remove_chars_jbug (body string) (string){    
+    regex, _ := regexp.Compile("<link .*?>")
+    result := regex.ReplaceAllString(body, "")
+    return result
+}
+
+
+func remove_chars_mac (body string) (string){
+    regex, _ := regexp.Compile("(?s)<script type=\"text/javascript\">.*?</script>")
     result := regex.ReplaceAllString(body, "")
     return result
 }
