@@ -15,7 +15,7 @@
             </thead>
             <tbody>
               {{range $index, $element := .}}
-                {{ if odd $index}}
+                {{ if r0 $index}}
                     <tr>
                       <td><a href="{{.Url}}">{{.Title}}</a></td>
                       <td class="status_{{.Status}}">{{.Status}}</td>
@@ -24,6 +24,26 @@
                     </tr>
                 {{end}} 
               {{end}}            
+            </tbody>
+          </table>
+          <table class="left">
+            <thead>
+              <th>Seite</th>
+              <th>Status</th>
+              <th>Letzte Änderung/<br>Letzter Check</th>
+              <th></th>
+            </thead>
+            <tbody>
+               {{range $index, $element := .}}
+                {{ if r1 $index}}
+                    <tr>
+                      <td><a href="{{.Url}}">{{.Title}}</a></td>
+                      <td class="status_{{.Status}}">{{.Status}}</td>
+                      <td>{{.Date.Format "Jan 2 15:04:05"}}</td>
+                      <td><a href="/reset?title={{.Title}}">Zur&uuml;cksetzen</a></td>
+                    </tr>
+                {{end}} 
+              {{end}}
             </tbody>
           </table>
           <table>
@@ -35,7 +55,7 @@
             </thead>
             <tbody>
                {{range $index, $element := .}}
-                {{ if even $index}}
+                {{ if r2 $index}}
                     <tr>
                       <td><a href="{{.Url}}">{{.Title}}</a></td>
                       <td class="status_{{.Status}}">{{.Status}}</td>
