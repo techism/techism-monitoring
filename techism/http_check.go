@@ -74,6 +74,8 @@ func clean_up_body (body string, url string) (string){
         body = remove_chars_jbug (body)
     } else if(strings.Contains(url, "mactreff")){
         body = remove_chars_mac (body)
+    } else if(strings.Contains(url, "meetup.com")){
+        body = remove_chars_meetup (body)
     }
     return body
 }
@@ -91,6 +93,13 @@ func calculate_checksum(body string) (string){
 //-----------------
 
 func remove_meta_fields (body string) (string){    
+    regex, _ := regexp.Compile("<meta .*?>")
+    result := regex.ReplaceAllString(body, "")
+    return result
+}
+
+
+func remove_style_sheet (body string) (string){    
     regex, _ := regexp.Compile("<meta .*?>")
     result := regex.ReplaceAllString(body, "")
     return result
@@ -171,12 +180,21 @@ func remove_chars_owasp (body string) (string){
 func remove_chars_jbug (body string) (string){    
     regex, _ := regexp.Compile("<link .*?>")
     result := regex.ReplaceAllString(body, "")
-    return result
+
+    regex2, _ := regexp.Compile("(?s)<script type=\"text/javascript\">.*?</script>")
+    result2 := regex2.ReplaceAllString(result, "")
+    return result2
 }
 
 
 func remove_chars_mac (body string) (string){
     regex, _ := regexp.Compile("(?s)<script type=\"text/javascript\">.*?</script>")
+    result := regex.ReplaceAllString(body, "")
+    return result
+}
+
+func remove_chars_meetup (body string) (string){
+    regex, _ := regexp.Compile("<p>Attending: .*?</p>")
     result := regex.ReplaceAllString(body, "")
     return result
 }

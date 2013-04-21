@@ -2,6 +2,7 @@ package techism
 
 import (
     "testing"
+    "fmt"
 )
 
 const plainText = "This is a text without any tags"
@@ -68,7 +69,7 @@ func TestArch1 (t *testing.T){
 
 func TestArch2 (t *testing.T){
     orig := "</a><a href=\"/main?do=login&amp;sectok=12345\"  class=\"action login\" rel=\"nofollow\" title=\"Anmelden\">Anmelden</a></div>"
-    stripped := "</a><a href=\"/main?do=login&amp;\"  class=\"action login\" rel=\"nofollow\" title=\"Anmelden\">Anmelden</a></div>"
+    stripped := "</a><a href=\"/main?do=login\"  class=\"action login\" rel=\"nofollow\" title=\"Anmelden\">Anmelden</a></div>"
     check_body (orig, stripped, t)
 }
 
@@ -90,6 +91,13 @@ func TestParameterJsessionid (t *testing.T){
     orig := "<li><a href=\"/contact.html;jsessionid=12345\" style=\"text-decoration:none;width:36px;display:block;\">Kontakt</a></li>"
     stripped := "<li><a href=\"/contact.html;\" style=\"text-decoration:none;width:36px;display:block;\">Kontakt</a></li>"
     check_body (orig, stripped, t)
+}
+
+
+func TestMeetup (t *testing.T){
+    orig := "<p>Thursday, May 16 at 7:00 PM</p> <p>Attending: 13</p> <p>Details: http://www.meetup.com/Udacity-Coursera-Stammtisch/events/114948122/</p>"
+    stripped := "<p>Thursday, May 16 at 7:00 PM</p>  <p>Details: http://www.meetup.com/Udacity-Coursera-Stammtisch/events/114948122/</p>"
+    check_body_url (orig, stripped, "http://meetup.com", t)
 }
 
 
@@ -117,9 +125,14 @@ func TestComments2 (t *testing.T){
     check_body (orig, stripped, t)
 }
 
-
 func check_body (orig string, stripped string, t *testing.T){
-    orig = clean_up_body (orig, "http://www.example.com") 
+    check_body_url (orig, stripped, "http://www.example.com", t) 
+    
+}
+
+func check_body_url (orig string, stripped string, url string, t *testing.T){
+    orig = clean_up_body (orig, url) 
+    fmt.Printf("orig: %s", orig)
     check1 := calculate_checksum (orig)
     check2 := calculate_checksum (stripped)
     assertEquals (check1, check2, t)
@@ -131,5 +144,3 @@ func assertEquals (str1 string, str2 string, t *testing.T){
         t.Fatalf("Test failed: " + str1 + " != " + str2)
     }
 }
-
-

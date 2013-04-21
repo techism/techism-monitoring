@@ -7,12 +7,6 @@
       <h2>User Group Status Board</h2>
       <div>
           <table class="left">
-            <thead>
-              <th>Seite</th>
-              <th>Status</th>
-              <th>Letzte Änderung/<br>Letzter Check</th>
-              <th></th>
-            </thead>
             <tbody>
               {{range $index, $element := .}}
                 {{ if r0 $index}}
@@ -20,19 +14,13 @@
                       <td><a href="{{.Url}}">{{.Title}}</a></td>
                       <td class="status_{{.Status}}">{{.Status}}</td>
                       <td>{{.Date.Format "Jan 2 15:04:05"}}</td>
-                      <td><a href="/reset?title={{.Title}}">Zur&uuml;cksetzen</a></td>
+                      <td><a href="/reset?title={{.Title}}">Reset</a></td>
                     </tr>
                 {{end}} 
               {{end}}            
             </tbody>
           </table>
           <table class="left">
-            <thead>
-              <th>Seite</th>
-              <th>Status</th>
-              <th>Letzte Änderung/<br>Letzter Check</th>
-              <th></th>
-            </thead>
             <tbody>
                {{range $index, $element := .}}
                 {{ if r1 $index}}
@@ -40,19 +28,13 @@
                       <td><a href="{{.Url}}">{{.Title}}</a></td>
                       <td class="status_{{.Status}}">{{.Status}}</td>
                       <td>{{.Date.Format "Jan 2 15:04:05"}}</td>
-                      <td><a href="/reset?title={{.Title}}">Zur&uuml;cksetzen</a></td>
+                      <td><a href="/reset?title={{.Title}}">Reset</a></td>
                     </tr>
                 {{end}} 
               {{end}}
             </tbody>
           </table>
           <table>
-            <thead>
-              <th>Seite</th>
-              <th>Status</th>
-              <th>Letzte Änderung/<br>Letzter Check</th>
-              <th></th>
-            </thead>
             <tbody>
                {{range $index, $element := .}}
                 {{ if r2 $index}}
@@ -60,7 +42,7 @@
                       <td><a href="{{.Url}}">{{.Title}}</a></td>
                       <td class="status_{{.Status}}">{{.Status}}</td>
                       <td>{{.Date.Format "Jan 2 15:04:05"}}</td>
-                      <td><a href="/reset?title={{.Title}}">Zur&uuml;cksetzen</a></td>
+                      <td><a href="/reset?title={{.Title}}">Reset</a></td>
                     </tr>
                 {{end}} 
               {{end}}
