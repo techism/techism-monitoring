@@ -19,6 +19,11 @@ Running the application
     dev_appserver.py techism-monitoring/ --clear_datastore
 
 
+### Local Datastore
+  
+    http://localhost:8080/_ah/admin/datastore
+
+
 Running Tests
 --------------
 * https://github.com/icub3d/appenginetesting can't be installed with GAE 1.7.5

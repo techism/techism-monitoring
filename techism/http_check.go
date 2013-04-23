@@ -63,7 +63,7 @@ func clean_up_body (body string, url string) (string){
     body = remove_images (body)
     body = remove_sessionids_and_csrftoken(body)
     body = remove_iframes (body)
-    //specific checks
+    // website specific checks
     if(strings.Contains(url, "it-szene")){
         body = remove_chars_itszene (body)
     } else if(strings.Contains(url, "freifunk")){
@@ -76,6 +76,8 @@ func clean_up_body (body string, url string) (string){
         body = remove_chars_mac (body)
     } else if(strings.Contains(url, "meetup.com")){
         body = remove_chars_meetup (body)
+    } else if(strings.Contains(url, "workshop-softwarearchitektur.de")){
+        body = remove_chars_architektur (body)
     }
     return body
 }
@@ -190,11 +192,21 @@ func remove_chars_jbug (body string) (string){
 func remove_chars_mac (body string) (string){
     regex, _ := regexp.Compile("(?s)<script type=\"text/javascript\">.*?</script>")
     result := regex.ReplaceAllString(body, "")
-    return result
+
+    regex2, _ := regexp.Compile("(?s)<div id=\"sidebar\">.*?</ul>\\s*</div>")
+    result2 := regex2.ReplaceAllString(result, "")
+    return result2
 }
 
 func remove_chars_meetup (body string) (string){
     regex, _ := regexp.Compile("<p>Attending: .*?</p>")
+    result := regex.ReplaceAllString(body, "")
+    return result
+}
+
+
+func remove_chars_architektur (body string) (string){
+    regex, _ := regexp.Compile("(?s)<div id=\"cloud\">.*?</div>")
     result := regex.ReplaceAllString(body, "")
     return result
 }
